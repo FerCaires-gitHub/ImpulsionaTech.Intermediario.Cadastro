@@ -1,11 +1,11 @@
-﻿using ImpulsionaTech.Intermediario.Cadastro.Domain.Dtos.Cliente;
-using ImpulsionaTech.Intermediario.Cadastro.Domain.Interfaces;
+﻿using ImpulsionaTech.Intermediario.Cadastro.Application.Commands.Clientes;
+using ImpulsionaTech.Intermediario.Cadastro.Application.Queries.Clientes;
+using ImpulsionaTech.Intermediario.Cadastro.Application.Responses.Clientes;
 using ImpulsionaTech.Intermediario.Cadastro.Domain.Shared.Exceptions;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ImpulsionaTech.Intermediario.Cadastro.Api.Controllers
@@ -15,22 +15,22 @@ namespace ImpulsionaTech.Intermediario.Cadastro.Api.Controllers
     public class ClienteController:ControllerBase
     {
         private readonly ILogger<ClienteController> _logger;
-        private readonly IClienteService _service;
+        private readonly IMediator _mediator;
 
-        public ClienteController(ILogger<ClienteController> logger, IClienteService service)
+        public ClienteController(ILogger<ClienteController> logger, IMediator mediator)
         {
             _logger = logger;
-            _service = service;
+            _mediator = mediator;
         }
 
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult<ClienteResponse>> Get(int id)
+        public async Task<ActionResult<GetClienteResponse>> Get(int id)
         {
             try
             {
-                var response = await _service.GetByIdAsync(id);
+                var response = await _mediator.Send(new GetClienteByIdQuery { Id =id});
                 return Ok(response);
             }
             catch (CustomException ex)
@@ -44,11 +44,11 @@ namespace ImpulsionaTech.Intermediario.Cadastro.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ClienteResponse>> Get()
+        public async Task<ActionResult<GetClienteResponse>> Get()
         {
             try
             {
-                var response = await _service.ListAsync(null);
+                var response = await _mediator.Send(new GetClientesQuery { });
                 return Ok(response);
             }
             catch(CustomException ex)
@@ -62,11 +62,11 @@ namespace ImpulsionaTech.Intermediario.Cadastro.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ClienteResponse>> Insert([FromBody] ClienteRequest request)
+        public async Task<ActionResult<InsertClienteResponse>> Insert([FromBody] InsertClienteCommand request)
         {
             try
             {
-                var response = await _service.InsertAsync(request);
+                var response = await _mediator.Send(request);
                 return Ok(response);
             }
             catch (CustomException ex)
@@ -79,11 +79,11 @@ namespace ImpulsionaTech.Intermediario.Cadastro.Api.Controllers
             }
         }
         [HttpPut]
-        public async Task<ActionResult<ClienteResponse>> Update([FromBody] UpdateClienteRequest request)
+        public async Task<ActionResult<bool>> Update( UpdateClienteCommand request)
         {
             try
             {
-                var response = await _service.UpdateAsync(request);
+                var response = await _mediator.Send(request);
                 return Ok(response);
             }
             catch (CustomException ex)
@@ -97,11 +97,11 @@ namespace ImpulsionaTech.Intermediario.Cadastro.Api.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult<ClienteResponse>> Delete(int id)
+        public async Task<ActionResult<bool>> Delete(int id)
         {
             try
             {
-                await _service.DeletetAsync(id);
+                await _mediator.Send(new DeleteClienteCommand { });
                 return Ok();
             }
             catch (CustomException ex)

@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ImpulsionaTech.Intermediario.Cadastro.Domain.Dtos.Cliente
+namespace ImpulsionaTech.Intermediario.Cadastro.Application.Responses.Clientes
 {
-    public class ClienteResponse : BaseResponse
+    public class GetClienteResponse
     {
+        public int Id { get; set; }
         public string Nome { get; set; }
+
         public string CPF { get; set; }
     }
 }

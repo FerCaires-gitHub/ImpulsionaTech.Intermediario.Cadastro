@@ -1,10 +1,9 @@
-﻿using ImpulsionaTech.Intermediario.Cadastro.Domain.Dtos.TipoConta;
-using ImpulsionaTech.Intermediario.Cadastro.Domain.Interfaces;
+﻿using ImpulsionaTech.Intermediario.Cadastro.Application.Queries.TiposConta;
+using ImpulsionaTech.Intermediario.Cadastro.Application.Responses.TiposConta;
 using ImpulsionaTech.Intermediario.Cadastro.Domain.Shared.Exceptions;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ImpulsionaTech.Intermediario.Cadastro.Api.Controllers
@@ -13,19 +12,19 @@ namespace ImpulsionaTech.Intermediario.Cadastro.Api.Controllers
     [Route("v1/tipos_conta")]
     public class TipoContaController:ControllerBase
     {
-        private readonly ITipoContaService _service;
+        private readonly IMediator _mediator;
 
-        public TipoContaController(ITipoContaService service)
+        public TipoContaController(IMediator mediator)
         {
-            _service = service;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<ActionResult<TipoContaResponse>> Get()
+        public async Task<ActionResult<GetTiposContaResponse>> Get()
         {
             try
             {
-                var response = await _service.ListAsync(null);
+                var response = await _mediator.Send(new GetTiposContaQuery { });
                 return Ok(response);
             }
             catch(CustomException ex)

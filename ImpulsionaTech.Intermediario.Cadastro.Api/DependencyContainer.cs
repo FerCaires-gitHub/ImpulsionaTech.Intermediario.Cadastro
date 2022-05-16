@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using AutoMapper.Extensions.ExpressionMapping;
-using ImpulsionaTech.Intermediario.Cadastro.Domain.Dtos.Cliente;
-using ImpulsionaTech.Intermediario.Cadastro.Domain.Dtos.TipoConta;
+using ImpulsionaTech.Intermediario.Cadastro.Application;
+using ImpulsionaTech.Intermediario.Cadastro.Application.Commands.Clientes;
+using ImpulsionaTech.Intermediario.Cadastro.Application.Responses.Clientes;
+using ImpulsionaTech.Intermediario.Cadastro.Application.Responses.TiposConta;
 using ImpulsionaTech.Intermediario.Cadastro.Domain.Interfaces;
 using ImpulsionaTech.Intermediario.Cadastro.Domain.Model;
-using ImpulsionaTech.Intermediario.Cadastro.Domain.Services;
 using ImpulsionaTech.Intermediario.Cadastro.Infrastructure.Data;
 using ImpulsionaTech.Intermediario.Cadastro.Infrastructure.Data.Repositories;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,13 +26,13 @@ namespace ImpulsionaTech.Intermediario.Cadastro.Api
                 cfg.AllowNullCollections = true;
                 cfg.AddExpressionMapping();
 
-                cfg.CreateMap<ClienteRequest, Cliente>();
-                cfg.CreateMap<Cliente, ClienteResponse>().ReverseMap();
-                cfg.CreateMap<UpdateClienteRequest, Cliente>();
+                cfg.CreateMap<InsertClienteCommand, Cliente>();
+                cfg.CreateMap<Cliente, InsertClienteResponse>();
+                cfg.CreateMap<Cliente, GetClienteResponse>();
+                cfg.CreateMap<UpdateClienteCommand, Cliente>();
 
-                cfg.CreateMap<TipoContaRequest, TipoConta>();
-                cfg.CreateMap<TipoConta, TipoContaResponse>().ReverseMap();
-                cfg.CreateMap<UpdateTipoContaRequest, TipoConta>();
+                cfg.CreateMap<InsertClienteCommand, TipoConta>();
+                cfg.CreateMap<TipoConta, InsertTipoContaResponse>().ReverseMap();
 
             });
             IMapper mapper = config.CreateMapper();
@@ -40,13 +42,11 @@ namespace ImpulsionaTech.Intermediario.Cadastro.Api
             //services.AddDbContext<EFContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddTransient(typeof(AsyncRepository<>));
-            services.AddTransient<IUnitOfWork<Cliente>, UnitOfWork<Cliente>>();
-            services.AddTransient<IClienteService, ClienteService>();
-            services.AddTransient<IServiceBase<ClienteRequest, ClienteResponse, Cliente>, ServiceBase<ClienteRequest, ClienteResponse, Cliente>>();
-
-            services.AddTransient<IUnitOfWork<TipoConta>, UnitOfWork<TipoConta>>();
-            services.AddTransient<ITipoContaService, TipoContaService>();
-            services.AddTransient<IServiceBase<TipoContaRequest, TipoContaResponse, TipoConta>, ServiceBase<TipoContaRequest, TipoContaResponse, TipoConta>>();
+            services.AddTransient<IAsyncRepository<Cliente>, AsyncRepository<Cliente>>();
+            services.AddTransient<IAsyncRepository<TipoConta>, AsyncRepository<TipoConta>>();
+            services.AddTransient<IAsyncRepository<Conta>, AsyncRepository<Conta>>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddMediatR(typeof(MediatREntryPoint).Assembly);
 
             services.AddSwaggerGen(swagger =>
             {

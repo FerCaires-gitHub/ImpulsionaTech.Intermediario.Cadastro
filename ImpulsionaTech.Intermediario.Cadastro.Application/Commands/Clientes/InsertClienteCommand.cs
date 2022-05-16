@@ -1,15 +1,17 @@
-﻿using ImpulsionaTech.Intermediario.Cadastro.Domain.Shared.Annotation;
+﻿using ImpulsionaTech.Intermediario.Cadastro.Application.Responses.Clientes;
+using ImpulsionaTech.Intermediario.Cadastro.Domain.Shared.Annotation;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace ImpulsionaTech.Intermediario.Cadastro.Domain.Dtos.Cliente
+namespace ImpulsionaTech.Intermediario.Cadastro.Application.Commands.Clientes
 {
-    public class ClienteRequest
+    public class InsertClienteCommand : IRequest<InsertClienteResponse>
     {
         [Required]
-        [StringLength(50,ErrorMessage ="Máximo de 50 caracteres")]
+        [StringLength(50, ErrorMessage = "Máximo de 50 caracteres")]
         public string Nome { get; set; }
 
         [Required]

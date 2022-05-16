@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Commands\Contas\" />
+    <Folder Include="EventHandlers\Clientes\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="10.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ImpulsionaTech.Intermediario.Cadastro.Domain\ImpulsionaTech.Intermediario.Cadastro.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
