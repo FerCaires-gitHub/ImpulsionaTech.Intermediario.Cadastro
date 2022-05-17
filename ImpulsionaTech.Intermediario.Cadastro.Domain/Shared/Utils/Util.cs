@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ImpulsionaTech.Intermediario.Cadastro.Domain.Base;
+using ImpulsionaTech.Intermediario.Cadastro.Domain.Shared.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,6 +8,14 @@ namespace ImpulsionaTech.Intermediario.Cadastro.Domain.Shared.Utils
 {
     public static class Util
     {
+
+        public static void ValidaRequest (object request)
+        {
+            var model = request as BaseEntity;
+            if (model == null || model?.Id == 0)
+                throw new CustomException(400, "Request inválida");
+        }
+
         public static string RemoveNaoNumericos(string text)
         {
             System.Text.RegularExpressions.Regex reg = new System.Text.RegularExpressions.Regex(@"[^0-9]");

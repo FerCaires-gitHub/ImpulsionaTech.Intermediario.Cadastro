@@ -122,7 +122,7 @@ namespace ImpulsionaTech.Intermediario.Cadastro.Api.Controllers
         {
             try
             {
-                await _mediator.Send(new DeleteClienteCommand { });
+                await _mediator.Send(new DeleteClienteCommand { Id = id });
                 return Ok();
             }
             catch (CustomException ex)

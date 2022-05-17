@@ -24,5 +24,10 @@ namespace ImpulsionaTech.Intermediario.Cadastro.Domain.Model
             this.Nome = nome;
 
         }
+
+        public void Inativar()
+        {
+            this.Status = Shared.Enums.Status.Inativo;
+        }
     }
 }
