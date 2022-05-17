@@ -6,7 +6,8 @@ using System.Text;
 
 namespace ImpulsionaTech.Intermediario.Cadastro.Application.Queries.TiposConta
 {
-   public  class GetTiposContaQuery : IRequest<IEnumerable<GetTipoContaResponse>>
+    public class GetTipoContaByIdQuery:IRequest<GetTipoContaResponse>
     {
+        public int Id { get; set; }
     }
 }

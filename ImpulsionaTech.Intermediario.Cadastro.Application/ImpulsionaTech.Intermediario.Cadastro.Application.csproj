@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\Contas\" />
     <Folder Include="EventHandlers\Clientes\" />
   </ItemGroup>
 

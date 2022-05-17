@@ -79,11 +79,31 @@ namespace ImpulsionaTech.Intermediario.Cadastro.Api.Controllers
             }
         }
         [HttpPut]
-        public async Task<ActionResult<bool>> Update( UpdateClienteCommand request)
+        [Route("{id}")]
+        public async Task<ActionResult<bool>> Update(int id, [FromBody] string nome)
         {
             try
             {
-                var response = await _mediator.Send(request);
+                var response = await _mediator.Send(new UpdateClienteCommand { Id = id, Nome = nome });
+                return Ok(response);
+            }
+            catch (CustomException ex)
+            {
+                return StatusCode(ex.StatusCode, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.InnerException.ToString());
+            }
+        }
+
+        [HttpPut]
+        [Route("{id}/inativate")]
+        public async Task<ActionResult<bool>> Inativate(int id)
+        {
+            try
+            {
+                var response = await _mediator.Send(new InativateClienteCommand {Id = id });
                 return Ok(response);
             }
             catch (CustomException ex)
@@ -97,6 +117,7 @@ namespace ImpulsionaTech.Intermediario.Cadastro.Api.Controllers
         }
 
         [HttpDelete]
+        [Route("{id}")]
         public async Task<ActionResult<bool>> Delete(int id)
         {
             try

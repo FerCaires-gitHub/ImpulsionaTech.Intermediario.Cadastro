@@ -4,8 +4,6 @@ using ImpulsionaTech.Intermediario.Cadastro.Domain.Shared.Exceptions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,6 +21,8 @@ namespace ImpulsionaTech.Intermediario.Cadastro.Application.Handlers.Clientes
         }
         public async Task<bool> Handle(UpdateClienteCommand request, CancellationToken cancellationToken)
         {
+            if (request == null || request.Id == 0)
+                throw new CustomException(400, "Request inválida");
             var model = await _unitOfWork.Clientes.GetById(request.Id);
             if (model == null)
                 throw new CustomException(404, $"Cliente de id:{request.Id} não encontrado");

@@ -2,6 +2,7 @@
 using AutoMapper.Extensions.ExpressionMapping;
 using ImpulsionaTech.Intermediario.Cadastro.Application;
 using ImpulsionaTech.Intermediario.Cadastro.Application.Commands.Clientes;
+using ImpulsionaTech.Intermediario.Cadastro.Application.Commands.TiposConta;
 using ImpulsionaTech.Intermediario.Cadastro.Application.Responses.Clientes;
 using ImpulsionaTech.Intermediario.Cadastro.Application.Responses.TiposConta;
 using ImpulsionaTech.Intermediario.Cadastro.Domain.Interfaces;
@@ -31,8 +32,10 @@ namespace ImpulsionaTech.Intermediario.Cadastro.Api
                 cfg.CreateMap<Cliente, GetClienteResponse>();
                 cfg.CreateMap<UpdateClienteCommand, Cliente>();
 
-                cfg.CreateMap<InsertClienteCommand, TipoConta>();
-                cfg.CreateMap<TipoConta, InsertTipoContaResponse>().ReverseMap();
+                cfg.CreateMap<InsertTipoContaCommand, TipoConta>();
+                cfg.CreateMap<TipoConta, InsertTipoContaResponse>();
+                cfg.CreateMap<TipoConta, GetTipoContaResponse>();
+                cfg.CreateMap<UpdateTipoContaCommand, TipoConta>();
 
             });
             IMapper mapper = config.CreateMapper();

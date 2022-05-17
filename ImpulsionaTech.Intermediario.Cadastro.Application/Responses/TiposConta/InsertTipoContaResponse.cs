@@ -4,7 +4,8 @@ using System.Text;
 
 namespace ImpulsionaTech.Intermediario.Cadastro.Application.Responses.TiposConta
 {
-    public class InsertTipoContaResponse
+    public class InsertTipoContaResponse : GetTipoContaResponse
     {
+
     }
 }
