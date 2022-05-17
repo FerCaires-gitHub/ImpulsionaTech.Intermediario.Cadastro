@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ImpulsionaTech.Intermediario.Cadastro.Domain.Shared.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,7 +9,8 @@ namespace ImpulsionaTech.Intermediario.Cadastro.Application.Responses.Clientes
     {
         public int Id { get; set; }
         public string Nome { get; set; }
-
         public string CPF { get; set; }
+
+        public Status Status { get; set; }
     }
 }

@@ -1,15 +1,18 @@
 ﻿using AutoMapper;
 using ImpulsionaTech.Intermediario.Cadastro.Application.Commands.Clientes;
 using ImpulsionaTech.Intermediario.Cadastro.Application.Queries.Clientes;
+using ImpulsionaTech.Intermediario.Cadastro.Application.Queries.Contas;
 using ImpulsionaTech.Intermediario.Cadastro.Domain.Base;
 using ImpulsionaTech.Intermediario.Cadastro.Domain.Interfaces;
 using ImpulsionaTech.Intermediario.Cadastro.Domain.Model;
+using ImpulsionaTech.Intermediario.Cadastro.Domain.Shared.Enums;
 using ImpulsionaTech.Intermediario.Cadastro.Domain.Shared.Exceptions;
 using ImpulsionaTech.Intermediario.Cadastro.Domain.Shared.Utils;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,9 +40,15 @@ namespace ImpulsionaTech.Intermediario.Cadastro.Application.Handlers.Clientes
             {
                 var model = await _mediator.Send(new GetClienteByIdQuery { Id = request.Id });
                 var entity = _mapper.Map<Cliente>(model);
+                VerificaClienteAtivo(entity);
+                await VerificaSaldoEDeletaContas(entity);
                 entity.Inativar();
-                await _unitOfWork.Clientes.UpdateAsync(entity);
+                await _unitOfWork.Clientes.DeleteAsync(entity);
                 await _unitOfWork.SaveChangesAsync();
+            }
+            catch(CustomException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {
@@ -50,6 +59,27 @@ namespace ImpulsionaTech.Intermediario.Cadastro.Application.Handlers.Clientes
 
             return true;
 
+        }
+
+        private async Task VerificaSaldoEDeletaContas(Cliente entity)
+        {
+            var contas = await _mediator.Send(new GetContaByClienteIdQuery { ClienteId = entity.Id });
+            if (!contas.Any())
+                return;
+            if (contas.Count(x => x.Saldo > 0) > 0)
+                throw new CustomException(400, $"Existem contas com saldo. Favor providenciar a retirada antes de excluir o cliente");
+            foreach (var item in contas)
+            {
+                var conta = _mapper.Map<Conta>(item);
+                await _unitOfWork.Contas.DeleteAsync(conta);
+            }
+
+        }
+
+        private void VerificaClienteAtivo(Cliente model)
+        {
+            if (model.Status != Status.Ativo)
+                throw new CustomException(400, $"Cliente de id:{model.Id} já foi inativado");
         }
     }
 }

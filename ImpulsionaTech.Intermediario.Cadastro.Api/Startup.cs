@@ -35,7 +35,7 @@ namespace ImpulsionaTech.Intermediario.Cadastro.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
             app.UseRouting();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
